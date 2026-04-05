@@ -25,4 +25,24 @@ services:
                 limits:
                     memory: "1G"
         command: ["mongod", "--bind_ip_all"]
-        restart: "unless-stopped"
+
+    storage.rabbitmq:
+        image: "rabbitmq:4.2.5-management-alpine"
+        container_name: "local-dev.storage.rabbitmq"
+        environment:
+            - "RABBITMQ_DEFAULT_USER=${STORAGE_RABBITMQ_USER}"
+            - "RABBITMQ_DEFAULT_PASS=${STORAGE_RABBITMQ_PASSWORD}"
+            - "RABBITMQ_CLUSTER_NAME=local-dev"
+            - "RABBITMQ_NODENAME=local-dev-node-1"
+            - "RABBITMQ_ERLANG_COOKIE=secret-rabbitmq-cookie"
+        volumes:
+            - "./volumes/rabbitmq-data:/var/lib/rabbitmq"
+        ports:
+            - "${STORAGE_RABBITMQ_AMQP_PORT}:5672"
+            - "${STORAGE_RABBITMQ_HTTP_PORT}:15672"
+        networks:
+            - "local-dev"
+        deploy:
+            resources:
+                limits:
+                    memory: "512M"
