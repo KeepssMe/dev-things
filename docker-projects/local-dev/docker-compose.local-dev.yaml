@@ -1,0 +1,28 @@
+name: "local-dev"
+
+networks:
+    local-dev:
+        name: "local-dev"
+        driver: "bridge"
+
+services:
+
+    storage.mongodb:
+        image: "mongodb/mongodb-community-server:8.2.6-ubi9-slim"
+        container_name: "local-dev.storage.mongodb"
+        environment:
+            - "MONGODB_INITDB_ROOT_USERNAME=${STORAGE_MONGODB_USER}"
+            - "MONGODB_INITDB_ROOT_PASSWORD=${STORAGE_MONGODB_PASSWORD}"
+        volumes:
+            - "./volumes/mongodb-data:/data/db"
+            - "./volumes/mongodb-config:/data/configdb"
+        ports:
+            - "${STORAGE_MONGODB_PORT}:27017"
+        networks:
+            - "local-dev"
+        deploy:
+            resources:
+                limits:
+                    memory: "1G"
+        command: ["mongod", "--bind_ip_all"]
+        restart: "unless-stopped"
