@@ -10,6 +10,14 @@ volumes:
 
     local-dev.storage.mssql:
         name: "local-dev.storage.mssql"
+        
+    local-dev.storage.mongodb-data:
+        name: "local-dev.storage.mongodb-data"
+    local-dev.storage.mongodb-config:
+        name: "local-dev.storage.mongodb-config"
+        
+    local-dev.storage.rabbitmq:
+        name: "local-dev.storage.rabbitmq"
 
 services:
 
@@ -39,8 +47,10 @@ services:
             - "MONGODB_INITDB_ROOT_USERNAME=${STORAGE_MONGODB_USER}"
             - "MONGODB_INITDB_ROOT_PASSWORD=${STORAGE_MONGODB_PASSWORD}"
         volumes:
-            - "./volumes/mongodb-data:/data/db"
-            - "./volumes/mongodb-config:/data/configdb"
+            #- "./volumes/mongodb-data:/data/db"
+            #- "./volumes/mongodb-config:/data/configdb"
+            - "local-dev.storage.mongodb-data:/data/db"
+            - "local-dev.storage.mongodb-config:/data/configdb"
         ports:
             - "${STORAGE_MONGODB_PORT}:27017"
         networks:
@@ -60,7 +70,8 @@ services:
             - "RABBITMQ_NODENAME=local-dev-node-1"
             - "RABBITMQ_ERLANG_COOKIE=secret-rabbitmq-cookie"
         volumes:
-            - "./volumes/rabbitmq-data:/var/lib/rabbitmq"
+            #- "./volumes/rabbitmq:/var/lib/rabbitmq"
+            - "local-dev.storage.rabbitmq:/var/lib/rabbitmq"
         ports:
             - "${STORAGE_RABBITMQ_AMQP_PORT}:5672"
             - "${STORAGE_RABBITMQ_HTTP_PORT}:15672"
