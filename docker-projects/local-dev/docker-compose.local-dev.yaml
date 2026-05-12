@@ -1,14 +1,39 @@
 name: "local-dev"
 
 networks:
+
     local-dev:
         name: "local-dev"
         driver: "bridge"
 
+volumes:
+
+    local-dev.storage.mssql:
+        name: "local-dev.storage.mssql"
+
 services:
 
+    storage.mssql:
+        image: "mcr.microsoft.com/mssql/server:2025-CU4-ubuntu-24.04"
+        container_name: "local-dev.storage.mssql"
+        environment:
+            - "ACCEPT_EULA=Y"
+            - "MSSQL_PID=${STORAGE_MSSQL_PID}"
+            - "MSSQL_SA_PASSWORD=${STORAGE_MSSQL_PASSWORD}"
+        volumes:
+            #- "./volumes/mssql-data:/var/opt/mssql" #need ext4
+            - "local-dev.storage.mssql:/var/opt/mssql"
+        ports:
+            - "${STORAGE_MSSQL_PORT}:1433"
+        networks:
+            - "local-dev"
+        deploy:
+            resources:
+                limits:
+                    memory: "2G"
+
     storage.mongodb:
-        image: "mongodb/mongodb-community-server:8.2.6-ubi9-slim"
+        image: "mongodb/mongodb-community-server:8.3.1-ubi9-slim"
         container_name: "local-dev.storage.mongodb"
         environment:
             - "MONGODB_INITDB_ROOT_USERNAME=${STORAGE_MONGODB_USER}"
@@ -24,10 +49,9 @@ services:
             resources:
                 limits:
                     memory: "1G"
-        command: ["mongod", "--bind_ip_all"]
 
     storage.rabbitmq:
-        image: "rabbitmq:4.2.5-management-alpine"
+        image: "rabbitmq:4.3.0-management-alpine"
         container_name: "local-dev.storage.rabbitmq"
         environment:
             - "RABBITMQ_DEFAULT_USER=${STORAGE_RABBITMQ_USER}"
