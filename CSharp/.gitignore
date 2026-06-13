@@ -1,0 +1,10 @@
+### --- VisualStudio & CSharp --- ###
+
+.vs/
+
+**/*.rsuser
+**/*.suo
+**/*.user
+**/*.userosscache
+**/[Oo]bj
+**/[Bb]in

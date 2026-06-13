@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Core/" />
+  <Folder Name="/ExternalApis/">
+    <Project Path="ExternalApis/DevThings.DockerHubApi/DevThings.DockerHubApi.csproj" />
+    <Project Path="ExternalApis/DevThings.MicrosoftArtifactRegistryApi/DevThings.MicrosoftArtifactRegistryApi.csproj" />
+  </Folder>
+  <Folder Name="/Logic/" />
+  <Folder Name="/Utils/" />
+  <Folder Name="/Utils/DockerImage/">
+    <Project Path="Utils/DockerImage/DevThings.DockerImage.Sandbox/DevThings.DockerImage.Sandbox.csproj" />
+  </Folder>
+</Solution>
